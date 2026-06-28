@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { SITE, FAQ } from "../lib/site";
+import { SITE, FAQ, wixImg } from "../lib/site";
 
 const description =
   "How cardiologist screening, contraindications, and on-deck supervision make cold exposure defensible. No clearance, no water — there are no exceptions.";
@@ -44,6 +44,7 @@ const steps = [
         session.
       </p>
     </div>
+    <img src={wixImg("mistDeep", 1760, 740)} alt="Still dark cold water under heavy grey fog" width="1760" height="740" loading="lazy" decoding="async" class="mist-img mt-12 aspect-[16/7] w-full object-cover" />
   </header>
 
   <!-- The screening process -->

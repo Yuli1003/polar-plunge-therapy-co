@@ -86,19 +86,39 @@ const paragraphs = story?.body
 
   <!-- Find us -->
   <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
-    <p class="eyebrow">Find us</p>
-    <a
-      href="https://www.openstreetmap.org/search?query=Reykjavik"
-      target="_blank"
-      rel="noopener"
-      class="group relative mt-7 block aspect-[21/8] w-full overflow-hidden border border-line"
-      aria-label="Open map of the Reykjavik clinic location"
-    >
-      <span class="absolute inset-0" style="background-image: linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px); background-size: 56px 56px;"></span>
-      <span class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
-        <span class="h-2.5 w-2.5 rounded-full bg-ink"></span>
-        <span class="annot mt-3 bg-background px-3 py-1 transition-colors group-hover:text-ink">{SITE.city}, {SITE.country} — open map (→)</span>
-      </span>
-    </a>
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <p class="eyebrow">Find us</p>
+      <a href="https://www.openstreetmap.org/?mlat=64.1466&mlon=-21.9426#map=13/64.1466/-21.9426" target="_blank" rel="noopener" class="annot underline-offset-4 hover:text-ink hover:underline">Open in OpenStreetMap (→)</a>
+    </div>
+    <p class="annot mt-2">{SITE.city}, {SITE.country} · {SITE.hours}</p>
+
+    <div id="map-frame" class="relative mt-7 aspect-[21/9] w-full overflow-hidden border border-line">
+      <button
+        id="map-load"
+        type="button"
+        class="group absolute inset-0 flex flex-col items-center justify-center gap-3 bg-surface"
+        aria-label="Load interactive map of the Reykjavík clinic"
+      >
+        <span class="absolute inset-0" style="background-image: linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px); background-size: 56px 56px;"></span>
+        <span class="relative h-2.5 w-2.5 rounded-full bg-ink"></span>
+        <span class="cta-quiet relative">View map <span aria-hidden="true">(→)</span></span>
+      </button>
+    </div>
+
+    <script is:inline>
+      (function () {
+        var btn = document.getElementById("map-load");
+        if (!btn) return;
+        btn.addEventListener("click", function () {
+          var frame = document.getElementById("map-frame");
+          var src =
+            "https://www.openstreetmap.org/export/embed.html?bbox=-22.02%2C64.12%2C-21.86%2C64.17&layer=mapnik&marker=64.1466%2C-21.9426";
+          frame.innerHTML =
+            '<iframe title="Map of the Reykjavík clinic" loading="lazy" src="' +
+            src +
+            '" style="border:0;width:100%;height:100%;"></iframe>';
+        });
+      })();
+    </script>
   </section>
 </Layout>

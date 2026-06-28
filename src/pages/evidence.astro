@@ -1,6 +1,6 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import { SITE } from "../lib/site";
+import { SITE, wixImg } from "../lib/site";
 import { getResearchSummaries } from "../lib/cms";
 
 const research = await getResearchSummaries();
@@ -34,13 +34,14 @@ const jsonLd = {
         effect size we don't inflate.
       </p>
     </div>
+    <img src={wixImg("mistHorizon", 1760, 620)} alt="Pale still water meeting soft fog at a faint horizon" width="1760" height="620" loading="lazy" decoding="async" class="mist-img mt-12 aspect-[16/6] w-full object-cover" />
   </header>
 
-  <!-- quiet text filters -->
-  <section class="mx-auto max-w-[1600px] px-5 py-12 lg:px-10">
-    <nav class="flex flex-wrap items-center gap-x-7 gap-y-2" aria-label="Filter by topic">
+  <section class="mx-auto max-w-[1600px] px-5 py-14 lg:px-10 lg:py-20">
+    <!-- topic filters -->
+    <nav class="flex flex-wrap items-center gap-x-7 gap-y-2 border-b border-line pb-6" aria-label="Filter by topic">
       <a href="/evidence" class:list={["font-display text-lg transition-colors", !activeTopic ? "text-ink" : "text-ink-faint hover:text-ink"]}>
-        {!activeTopic && <span class="mr-1 text-mist" aria-hidden="true">·</span>}All
+        {!activeTopic && <span class="mr-1 text-mist" aria-hidden="true">·</span>}All studies
       </a>
       {
         topics.map((t) => (
@@ -51,30 +52,28 @@ const jsonLd = {
       }
     </nav>
 
-    <ul class="mt-10">
+    <!-- readable single-column entries -->
+    <ul>
       {
         filtered.map((r) => (
-          <li class="grid gap-x-8 gap-y-3 border-t border-line py-8 lg:grid-cols-12">
-            <div class="lg:col-span-7">
-              <div class="flex items-baseline justify-between gap-4">
-                <h2 class="font-display text-2xl leading-snug sm:text-3xl">{r.title}</h2>
-                <span class="annot shrink-0">{r.year}</span>
-              </div>
-              <p class="mt-2 font-display text-lg italic text-ink-soft">{r.claim}.</p>
+          <li class="border-b border-line py-10 lg:py-12">
+            <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-1">
+              <h2 class="max-w-3xl font-display text-2xl leading-snug sm:text-[1.75rem]">{r.title}</h2>
+              <span class="annot shrink-0">{r.topic} · {r.year}</span>
             </div>
-            <p class="text-ink-soft lg:col-span-4 lg:col-start-9">{r.summary}</p>
-            <dl class="mt-2 flex flex-wrap gap-x-8 gap-y-1 lg:col-span-12">
-              <div class="flex gap-2"><dt class="annot">Topic</dt><dd class="annot text-ink-soft">{r.topic}</dd></div>
-              <div class="flex gap-2"><dt class="annot">Study</dt><dd class="annot text-ink-soft">{r.studyType}</dd></div>
-              <div class="flex gap-2"><dt class="annot">Sample</dt><dd class="annot text-ink-soft">{r.sampleSize}</dd></div>
-              <div class="flex gap-2"><dt class="annot">Effect</dt><dd class="annot text-ink">{r.effectStrength}</dd></div>
-            </dl>
+            <p class="mt-3 max-w-3xl font-display text-xl italic leading-snug text-ink-soft">{r.claim}.</p>
+            <p class="mt-6 max-w-[64ch] leading-[1.65] text-ink-soft">{r.summary}</p>
+            <p class="annot mt-6 flex flex-wrap gap-x-2">
+              <span>{r.studyType}</span><span aria-hidden="true">·</span>
+              <span>{r.sampleSize}</span><span aria-hidden="true">·</span>
+              <span>Effect strength: <span class="text-ink">{r.effectStrength}</span></span>
+            </p>
           </li>
         ))
       }
     </ul>
 
-    <div class="mt-12 border-t border-line pt-8">
+    <div class="pt-10">
       <a href="/protocol" class="cta">The protocol is built on these studies — read it next <span aria-hidden="true">→</span></a>
     </div>
   </section>

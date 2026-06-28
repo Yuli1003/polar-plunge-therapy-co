@@ -64,7 +64,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).hr
     <main id="main">
       <slot />
     </main>
-    <Footer />
+    <Footer hideCta={Astro.url.pathname.replace(/\/$/, "") === "/intake"} />
     {!hideStickyBar && <MobileScreeningStickyBar client:load />}
   </body>
 </html>

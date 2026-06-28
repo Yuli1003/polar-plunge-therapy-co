@@ -19,6 +19,9 @@ const MEDIA = {
   mistWater: "a7fb22_623f1887e07443d09dbcdc064a429d48~mv2.jpg",
   mistVapor: "a7fb22_b530e1e4ea1b46debb99e08cc9a0e551~mv2.jpg",
   surface: "a7fb22_61c727b382c943d2ba687b644a09ff97~mv2.jpg",
+  mistDeep: "a7fb22_e5dce530920f4fd0a4950eb083a8df6f~mv2.jpg",
+  mistHorizon: "a7fb22_8f83bb53a37b46f7a25a787fe048d693~mv2.jpg",
+  mistRipple: "a7fb22_9215f375f902433f807ee71fb2e2d93a~mv2.jpg",
 };
 
 export function wixImg(key: keyof typeof MEDIA, w: number, h: number): string {

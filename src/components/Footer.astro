@@ -1,5 +1,6 @@
 ---
 import { SITE, NAV_LINKS } from "../lib/site";
+const { hideCta = false } = Astro.props;
 ---
 
 <footer class="border-t border-line">
@@ -11,7 +12,7 @@ import { SITE, NAV_LINKS } from "../lib/site";
           Screen first.<br />
           Then, maybe, the water.
         </p>
-        <a href="/intake" class="cta mt-8">Start medical screening <span aria-hidden="true">→</span></a>
+        {!hideCta && <a href="/intake" class="cta mt-8">Start medical screening <span aria-hidden="true">→</span></a>}
       </div>
 
       <div class="grid grid-cols-2 gap-8 self-end">

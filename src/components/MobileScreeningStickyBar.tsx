@@ -8,7 +8,14 @@ export default function MobileScreeningStickyBar() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setVisible(window.scrollY > 560);
+    const onScroll = () => {
+      const scrolled = window.scrollY > 560;
+      // hide once the footer (and its CTA) comes into view, so we never stack two
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.body.offsetHeight - window.innerHeight * 0.9;
+      setVisible(scrolled && !nearBottom);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
