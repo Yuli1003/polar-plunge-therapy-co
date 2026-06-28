@@ -1,0 +1,115 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE, FAQ } from "../lib/site";
+
+const description =
+  "How cardiologist screening, contraindications, and on-deck supervision make cold exposure defensible. No clearance, no water — there are no exceptions.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: FAQ.map((f) => ({
+    "@type": "Question",
+    name: f.question,
+    acceptedAnswer: { "@type": "Answer", text: f.answer },
+  })),
+};
+
+const contraindications = [
+  "Uncontrolled hypertension",
+  "Certain arrhythmias",
+  "Recent cardiac events",
+  "Raynaud's phenomenon",
+  "Cold urticaria",
+  "Pregnancy",
+];
+
+const steps = [
+  { n: "01", title: "Health questionnaire", body: "You complete a structured questionnaire covering cardiac history, medications, and known contraindications. A clinician reads every one — not a bot." },
+  { n: "02", title: "Cardiac screen", body: "Our partnering cardiologist reviews your questionnaire and screens for cardiovascular risk before any immersion is booked." },
+  { n: "03", title: "A clear yes or no", body: "We tell you plainly whether cold exposure is safe for you. If it isn't, we say so — and we do turn people away." },
+];
+---
+
+<Layout title="Screening & Safety" description={description} jsonLd={jsonLd}>
+  <header class="mx-auto max-w-[1600px] px-5 pt-16 lg:px-10 lg:pt-24">
+    <div class="grid gap-y-8 lg:grid-cols-12 lg:gap-x-8">
+      <p class="eyebrow lg:col-span-12">Screening & safety</p>
+      <h1 class="font-display text-[2.5rem] font-normal leading-[1.07] tracking-tight sm:text-6xl lg:col-span-8">
+        No clearance, no water.<br /><span class="italic text-ink-soft">There are no exceptions.</span>
+      </h1>
+      <p class="max-w-md self-end text-lg leading-relaxed text-ink-soft lg:col-span-4">
+        Cold exposure carries real cardiovascular load. The screening exists to find
+        risk before, not after — and a trained supervisor stays on the deck for every
+        session.
+      </p>
+    </div>
+  </header>
+
+  <!-- The screening process -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <div class="grid gap-y-10 lg:grid-cols-12 lg:gap-x-8">
+      <h2 class="font-display text-2xl text-ink-soft lg:col-span-3">The screening process</h2>
+      <ol class="lg:col-span-9">
+        {
+          steps.map((s, i) => (
+            <li class:list={["grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 py-8 sm:grid-cols-[auto_14rem_1fr]", i > 0 && "border-t border-line"]}>
+              <span class="annot pt-1.5">{s.n}</span>
+              <h3 class="font-display text-2xl">{s.title}</h3>
+              <p class="col-start-2 text-ink-soft sm:col-start-3 sm:max-w-md">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- Contraindications + supervision -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <div class="grid gap-y-12 lg:grid-cols-12 lg:gap-x-8">
+      <div class="lg:col-span-6">
+        <h2 class="font-display text-2xl">Who is typically not cleared</h2>
+        <ul class="mt-8">
+          {
+            contraindications.map((c) => (
+              <li class="flex items-baseline gap-4 border-t border-line py-4 font-display text-xl">
+                <span class="annot" aria-hidden="true">—</span>
+                {c}
+              </li>
+            ))
+          }
+        </ul>
+        <p class="mt-6 text-sm text-ink-soft">This list is not exhaustive. The cardiac screen exists precisely to catch what a checklist can't.</p>
+      </div>
+      <div class="lg:col-span-6 lg:pl-8">
+        <span class="vtext float-right ml-6 hidden h-full lg:block">Eftirlit · Öryggi</span>
+        <h2 class="font-display text-2xl">Supervision, every session</h2>
+        <p class="mt-6 max-w-md text-lg leading-relaxed text-ink-soft">
+          A trained supervisor stays on the deck for the entire immersion and monitors
+          your response. We watch heart rate and breathing, and we end a session early
+          if your body says so. Cold is a tool — we treat it like one.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <div class="grid gap-y-10 lg:grid-cols-12 lg:gap-x-8">
+      <h2 class="font-display text-2xl text-ink-soft lg:col-span-3">Questions,<br />answered plainly</h2>
+      <div class="lg:col-span-9">
+        {
+          FAQ.map((f, i) => (
+            <details class="group border-t border-line" open={i === 0}>
+              <summary class="flex cursor-pointer list-none items-baseline justify-between gap-6 py-6 font-display text-xl [&::-webkit-details-marker]:hidden sm:text-2xl">
+                {f.question}
+                <span class="annot transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="max-w-2xl pb-7 leading-relaxed text-ink-soft">{f.answer}</p>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Layout>

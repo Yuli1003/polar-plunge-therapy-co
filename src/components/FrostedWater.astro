@@ -1,0 +1,41 @@
+---
+/**
+ * "Data-frosted" still-water treatment — a pale-blue gradient field with a thin
+ * immersion line and faint horizontal bands suggesting a calm water surface.
+ * Pure CSS/SVG: no external image, near-zero LCP cost, on-brand (icy, clinical).
+ */
+interface Props {
+  class?: string;
+  label?: string;
+}
+const { class: className = "", label = "Still water surface at the immersion line" } = Astro.props;
+---
+
+<div
+  class={`relative overflow-hidden border border-border ${className}`}
+  role="img"
+  aria-label={label}
+  style="background: linear-gradient(180deg, #eaf6fb 0%, #cfe9f2 46%, #aed7e6 54%, #7fbcd2 100%);"
+>
+  <!-- frost grain + light sheen -->
+  <div
+    class="absolute inset-0 opacity-70"
+    style="background:
+      radial-gradient(120% 60% at 30% 0%, rgba(255,255,255,0.65), transparent 60%),
+      radial-gradient(80% 40% at 80% 10%, rgba(255,255,255,0.4), transparent 55%);"
+  >
+  </div>
+  <!-- the immersion line -->
+  <div class="absolute inset-x-0 top-1/2 h-px bg-[#0d1b2a]/25"></div>
+  <!-- faint water bands below the line -->
+  <svg
+    class="absolute inset-x-0 bottom-0 top-1/2 h-1/2 w-full"
+    preserveAspectRatio="none"
+    viewBox="0 0 100 50"
+    aria-hidden="true"
+  >
+    {[8, 18, 30, 44].map((y) => (
+      <line x1="0" x2="100" y1={y} y2={y} stroke="#0d1b2a" stroke-opacity="0.06" stroke-width="0.5" />
+    ))}
+  </svg>
+</div>

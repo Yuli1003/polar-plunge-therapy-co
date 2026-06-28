@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://polar-plun-56d84ce8-yulia004.wix-site-host.com/sitemap-index.xml

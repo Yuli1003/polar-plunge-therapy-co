@@ -1,0 +1,20 @@
+---
+/**
+ * Signature device — a pale-cyan sparkline stroke that draws itself
+ * left-to-right beneath section headings (CSS stroke-dashoffset, no JS, no library).
+ */
+interface Props {
+  class?: string;
+}
+const { class: className = "" } = Astro.props;
+---
+
+<svg
+  class={`adaptation-line ${className}`}
+  viewBox="0 0 120 16"
+  preserveAspectRatio="none"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d="M0,12 L18,11 L34,13 L52,7 L70,9 L88,4 L104,6 L120,2" />
+</svg>

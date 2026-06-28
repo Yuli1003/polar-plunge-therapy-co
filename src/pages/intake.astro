@@ -1,0 +1,31 @@
+---
+import Layout from "../layouts/Layout.astro";
+import ScreeningIntakeForm from "../components/ScreeningIntakeForm.tsx";
+
+const description =
+  "Complete the health questionnaire and request a cardiac screen. A clinician reviews every questionnaire before we book anything — expect a clear yes or no within two business days.";
+---
+
+<Layout title="Intake & Screening" description={description} hideStickyBar={true}>
+  <header class="mx-auto max-w-3xl px-5 pt-16 lg:pt-24">
+    <p class="eyebrow">Intake & screening</p>
+    <h1 class="mt-7 font-display text-[2.5rem] font-normal leading-[1.07] tracking-tight sm:text-6xl">
+      Submit a screening request.
+    </h1>
+    <p class="mt-8 border-l border-line pl-5 font-display text-lg italic leading-relaxed text-ink-soft">
+      This questionnaire is reviewed by a clinician, not a bot. We screen before we
+      book, and we will tell you plainly if cold exposure is not safe for you.
+    </p>
+  </header>
+
+  <section class="mx-auto max-w-3xl px-5 py-14 lg:py-20">
+    <ScreeningIntakeForm client:idle />
+  </section>
+
+  <section class="mx-auto max-w-3xl px-5 pb-24">
+    <p class="annot border-t border-line pt-6">
+      Prefer to read first? See <a href="/safety" class="text-ink underline-offset-4 hover:underline">screening & safety</a>
+      or the <a href="/protocol" class="text-ink underline-offset-4 hover:underline">8-week protocol</a>.
+    </p>
+  </section>
+</Layout>

@@ -1,0 +1,70 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+import MobileScreeningStickyBar from "../components/MobileScreeningStickyBar.tsx";
+import { SITE } from "../lib/site";
+
+interface Props {
+  title: string;
+  description: string;
+  /** One or more JSON-LD objects rendered into <head>. */
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+  /** Hide the mobile sticky screening bar (e.g. on the intake page itself). */
+  hideStickyBar?: boolean;
+  /** Preload an above-the-fold LCP image (e.g. the hero). */
+  preloadImage?: string;
+}
+
+const { title, description, jsonLd, hideStickyBar = false, preloadImage } =
+  Astro.props;
+const fullTitle = title.includes(SITE.shortName)
+  ? title
+  : `${title} · ${SITE.name}`;
+const ldArray = jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [];
+const canonical = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin).href;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {preloadImage && <link rel="preload" as="image" href={preloadImage} fetchpriority="high" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#0d1b2a" />
+
+    {
+      ldArray.map((ld) => (
+        <script
+          type="application/ld+json"
+          set:html={JSON.stringify(ld)}
+        />
+      ))
+    }
+  </head>
+  <body class="min-h-screen">
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-primary focus:px-4 focus:py-2 focus:text-on-dark"
+      >Skip to content</a
+    >
+    <Nav />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    {!hideStickyBar && <MobileScreeningStickyBar client:load />}
+  </body>
+</html>

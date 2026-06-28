@@ -1,0 +1,96 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE, PROTOCOL_WEEKS, wixImg } from "../lib/site";
+
+const description =
+  "The full 8-week supervised cold-exposure protocol: week-by-week water temperatures, immersion durations, and what we monitor at each stage. Nothing improvised.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MedicalTherapy",
+  name: "8-Week Supervised Cold-Exposure Protocol",
+  description,
+  howPerformed:
+    "A cardiologist-screened, supervisor-monitored cold-immersion program progressing from ~12°C to ~5°C across eight weeks, with written temperatures and durations.",
+  medicineSystem: "https://schema.org/WesternConventional",
+  relevantSpecialty: "Cardiology",
+  provider: { "@type": "MedicalClinic", name: SITE.name },
+};
+
+const temps = PROTOCOL_WEEKS.map((w) => w.tempC);
+const durations = PROTOCOL_WEEKS.map((w) => parseInt(w.duration.split(":")[0], 10) * 60 + parseInt(w.duration.split(":")[1], 10));
+function path(values: number[], w = 320, h = 120, pad = 8) {
+  const min = Math.min(...values), max = Math.max(...values), span = max - min || 1;
+  const stepX = (w - pad * 2) / (values.length - 1);
+  return values.map((v, i) => `${i === 0 ? "M" : "L"}${(pad + i * stepX).toFixed(1)},${(pad + (h - pad * 2) * (1 - (v - min) / span)).toFixed(1)}`).join(" ");
+}
+const atmoImg = wixImg("mistVapor", 1600, 700);
+---
+
+<Layout title="The 8-Week Protocol" description={description} jsonLd={jsonLd}>
+  <header class="mx-auto max-w-[1600px] px-5 pt-16 lg:px-10 lg:pt-24">
+    <div class="grid gap-y-8 lg:grid-cols-12 lg:gap-x-8">
+      <p class="eyebrow lg:col-span-12">The 8-week protocol</p>
+      <h1 class="font-display text-[2.5rem] font-normal leading-[1.07] tracking-tight sm:text-6xl lg:col-span-8">
+        Eight weeks, written down to the degree and the second.
+      </h1>
+      <p class="max-w-md self-end text-lg leading-relaxed text-ink-soft lg:col-span-4">
+        The protocol starts around 12&thinsp;°C for short, supervised exposures and
+        progresses over eight weeks. Every temperature and duration is written into
+        your program. A trained supervisor stays on the deck for every session.
+      </p>
+    </div>
+  </header>
+
+  <!-- Week-by-week, as a quiet ledger -->
+  <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-10 lg:py-24">
+    <div class="grid grid-cols-[3rem_1fr_1fr] border-b border-line pb-3 sm:grid-cols-[5rem_8rem_10rem_1fr]">
+      <span class="annot">Week</span>
+      <span class="annot">Water</span>
+      <span class="annot max-sm:hidden">Max immersion</span>
+      <span class="annot text-right sm:text-left">Monitored</span>
+    </div>
+    {
+      PROTOCOL_WEEKS.map((w) => (
+        <div class="grid grid-cols-[3rem_1fr_1fr] items-baseline border-b border-line py-6 sm:grid-cols-[5rem_8rem_10rem_1fr]">
+          <span class="font-display text-xl text-ink-soft">{w.week}</span>
+          <span class="font-display text-3xl tabular-nums">{w.tempC}<span class="metric-unit text-base text-ink-faint"> °c</span></span>
+          <span class="font-display text-xl tabular-nums max-sm:hidden">{w.duration}<span class="metric-unit text-ink-faint"> min</span></span>
+          <span class="text-ink-soft max-sm:col-span-3 max-sm:mt-2 max-sm:text-sm">{w.monitoring}</span>
+        </div>
+      ))
+    }
+  </section>
+
+  <!-- Charts -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <h2 class="font-display text-2xl text-ink-soft">Temperature down, duration up</h2>
+    <div class="mt-12 grid gap-16 md:grid-cols-2">
+      <figure>
+        <figcaption class="eyebrow mb-6">Water temperature — 12 → 5 °C</figcaption>
+        <svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="Water temperature falls from 12 to 5 degrees across eight weeks">
+          <path d={path(temps)} fill="none" stroke="var(--color-mist)" stroke-width="1.25" vector-effect="non-scaling-stroke" />
+          {temps.map((v, i) => { const x = 8 + i * ((320 - 16) / (temps.length - 1)); const span = Math.max(...temps) - Math.min(...temps); const y = 8 + (120 - 16) * (1 - (v - Math.min(...temps)) / span); return <circle cx={x} cy={y} r="2" fill="var(--color-ink)" />; })}
+        </svg>
+      </figure>
+      <figure>
+        <figcaption class="eyebrow mb-6">Max immersion — 0:30 → 4:00 min</figcaption>
+        <svg viewBox="0 0 320 120" class="w-full" role="img" aria-label="Maximum immersion time rises from 30 seconds to 4 minutes across eight weeks">
+          <path d={path(durations)} fill="none" stroke="var(--color-mist)" stroke-width="1.25" vector-effect="non-scaling-stroke" />
+          {durations.map((v, i) => { const x = 8 + i * ((320 - 16) / (durations.length - 1)); const span = Math.max(...durations) - Math.min(...durations); const y = 8 + (120 - 16) * (1 - (v - Math.min(...durations)) / span); return <circle cx={x} cy={y} r="2" fill="var(--color-ink)" />; })}
+        </svg>
+      </figure>
+    </div>
+  </section>
+
+  <!-- Atmosphere + CTA -->
+  <section class="relative mt-8 border-y border-line">
+    <img src={atmoImg} alt="Cold vapor dissolving into pale air" width="1600" height="700" loading="lazy" decoding="async" class="mist-img h-[46vh] min-h-[300px] w-full object-cover" />
+    <div class="absolute inset-0 flex items-center">
+      <div class="mx-auto w-full max-w-[1600px] px-5 lg:px-10">
+        <h2 class="max-w-lg font-display text-3xl leading-snug sm:text-4xl">The protocol only begins after a clean cardiac screen.</h2>
+        <a href="/intake" class="cta mt-7">Start medical screening <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+</Layout>

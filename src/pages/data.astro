@@ -1,0 +1,32 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AdaptationDashboard from "../components/AdaptationDashboard.tsx";
+
+const description =
+  "A sample per-client adaptation dashboard. Resting heart rate, HRV, perceived recovery, and adherence — tracked across the eight-week program. Your trend line, not a testimonial.";
+---
+
+<Layout title="Your Adaptation Data" description={description}>
+  <header class="mx-auto max-w-[1600px] px-5 pt-16 lg:px-10 lg:pt-24">
+    <div class="grid gap-y-8 lg:grid-cols-12 lg:gap-x-8">
+      <p class="eyebrow lg:col-span-12">Your adaptation data</p>
+      <h1 class="font-display text-[2.5rem] font-normal leading-[1.07] tracking-tight sm:text-6xl lg:col-span-8">
+        Your trend line,<br /><span class="italic text-ink-soft">not a testimonial.</span>
+      </h1>
+      <p class="max-w-md self-end text-lg leading-relaxed text-ink-soft lg:col-span-4">
+        We track resting heart rate, heart-rate variability, perceived recovery, and
+        adherence so the result is data you can read — not a feeling you take on faith.
+        Here is what a sample client's eight weeks look like.
+      </p>
+    </div>
+  </header>
+
+  <section class="mx-auto max-w-[1600px] px-5 py-16 lg:px-10 lg:py-20">
+    <AdaptationDashboard client:visible />
+  </section>
+
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-20 lg:px-10 lg:py-28">
+    <h2 class="max-w-2xl font-display text-3xl leading-snug sm:text-4xl">Your own numbers start after a clean cardiac screen.</h2>
+    <a href="/intake" class="cta mt-7">Start medical screening <span aria-hidden="true">→</span></a>
+  </section>
+</Layout>

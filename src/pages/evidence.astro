@@ -1,0 +1,81 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE } from "../lib/site";
+import { getResearchSummaries } from "../lib/cms";
+
+const research = await getResearchSummaries();
+const activeTopic = Astro.url.searchParams.get("topic");
+const topics = [...new Set(research.map((r) => r.topic))];
+const filtered = activeTopic ? research.filter((r) => r.topic === activeTopic) : research;
+
+const description =
+  "An honest library of research summaries on cold exposure, inflammation, and mood — with study types, sample sizes, and effect sizes, including where the evidence is thin.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MedicalScholarlyArticle",
+  headline: "What the evidence on cold-exposure therapy actually says",
+  description,
+  author: { "@type": "MedicalClinic", name: SITE.name },
+  about: research.slice(0, 6).map((r) => ({ "@type": "MedicalCondition", name: r.topic })),
+};
+---
+
+<Layout title="The Evidence" description={description} jsonLd={jsonLd}>
+  <header class="mx-auto max-w-[1600px] px-5 pt-16 lg:px-10 lg:pt-24">
+    <div class="grid gap-y-8 lg:grid-cols-12 lg:gap-x-8">
+      <p class="eyebrow lg:col-span-12">The evidence</p>
+      <h1 class="font-display text-[2.5rem] font-normal leading-[1.07] tracking-tight sm:text-6xl lg:col-span-8">
+        What the studies actually say —<br /><span class="italic text-ink-soft">including where they are thin.</span>
+      </h1>
+      <p class="max-w-md self-end text-lg leading-relaxed text-ink-soft lg:col-span-4">
+        Moderate evidence for reduced inflammation and short-term mood lift; weaker
+        evidence for the bigger claims. We report study type, sample size, and an
+        effect size we don't inflate.
+      </p>
+    </div>
+  </header>
+
+  <!-- quiet text filters -->
+  <section class="mx-auto max-w-[1600px] px-5 py-12 lg:px-10">
+    <nav class="flex flex-wrap items-center gap-x-7 gap-y-2" aria-label="Filter by topic">
+      <a href="/evidence" class:list={["font-display text-lg transition-colors", !activeTopic ? "text-ink" : "text-ink-faint hover:text-ink"]}>
+        {!activeTopic && <span class="mr-1 text-mist" aria-hidden="true">·</span>}All
+      </a>
+      {
+        topics.map((t) => (
+          <a href={`/evidence?topic=${encodeURIComponent(t)}`} class:list={["font-display text-lg transition-colors", activeTopic === t ? "text-ink" : "text-ink-faint hover:text-ink"]}>
+            {activeTopic === t && <span class="mr-1 text-mist" aria-hidden="true">·</span>}{t}
+          </a>
+        ))
+      }
+    </nav>
+
+    <ul class="mt-10">
+      {
+        filtered.map((r) => (
+          <li class="grid gap-x-8 gap-y-3 border-t border-line py-8 lg:grid-cols-12">
+            <div class="lg:col-span-7">
+              <div class="flex items-baseline justify-between gap-4">
+                <h2 class="font-display text-2xl leading-snug sm:text-3xl">{r.title}</h2>
+                <span class="annot shrink-0">{r.year}</span>
+              </div>
+              <p class="mt-2 font-display text-lg italic text-ink-soft">{r.claim}.</p>
+            </div>
+            <p class="text-ink-soft lg:col-span-4 lg:col-start-9">{r.summary}</p>
+            <dl class="mt-2 flex flex-wrap gap-x-8 gap-y-1 lg:col-span-12">
+              <div class="flex gap-2"><dt class="annot">Topic</dt><dd class="annot text-ink-soft">{r.topic}</dd></div>
+              <div class="flex gap-2"><dt class="annot">Study</dt><dd class="annot text-ink-soft">{r.studyType}</dd></div>
+              <div class="flex gap-2"><dt class="annot">Sample</dt><dd class="annot text-ink-soft">{r.sampleSize}</dd></div>
+              <div class="flex gap-2"><dt class="annot">Effect</dt><dd class="annot text-ink">{r.effectStrength}</dd></div>
+            </dl>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="mt-12 border-t border-line pt-8">
+      <a href="/protocol" class="cta">The protocol is built on these studies — read it next <span aria-hidden="true">→</span></a>
+    </div>
+  </section>
+</Layout>

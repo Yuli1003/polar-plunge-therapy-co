@@ -1,0 +1,198 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE, PROTOCOL_WEEKS, FAQ, wixImg } from "../lib/site";
+import { getOutcomes, getResearchSummaries } from "../lib/cms";
+
+const outcomes = await getOutcomes();
+const research = await getResearchSummaries();
+const evidencePreview = research.slice(0, 4);
+
+const heroImg = wixImg("mistHero", 1100, 1320);
+const atmoImg = wixImg("mistWater", 1800, 760);
+
+const description =
+  "Medically supervised, cardiologist-screened cold-exposure therapy in Reykjavik. We screen before we book, write down every temperature, and track your adaptation on a dashboard.";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "MedicalClinic",
+    name: SITE.name,
+    description,
+    address: { "@type": "PostalAddress", addressLocality: "Reykjavik", addressCountry: "IS" },
+    priceRange: SITE.priceRange,
+    openingHours: ["Mo-Fr 07:00-19:00", "Sa 08:00-14:00"],
+    foundingDate: SITE.established,
+    medicalSpecialty: "Cardiology",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: FAQ.map((f) => ({
+      "@type": "Question",
+      name: f.question,
+      acceptedAnswer: { "@type": "Answer", text: f.answer },
+    })),
+  },
+];
+
+const steps = [
+  { n: "01", title: "Screen first", body: "A health questionnaire and a cardiac screen with our partnering cardiologist. No clearance, no water." },
+  { n: "02", title: "Adapt over eight weeks", body: "Written temperatures and durations, a supervisor on the deck for every session. Nothing improvised." },
+  { n: "03", title: "Watch the numbers move", body: "Resting heart rate, HRV, and perceived recovery, plotted on your own dashboard, week by week." },
+];
+---
+
+<Layout title={SITE.name} description={description} jsonLd={jsonLd} preloadImage={heroImg}>
+  <!-- 1 · Hero -->
+  <section class="relative mx-auto grid max-w-[1600px] gap-y-12 px-5 pb-20 pt-10 lg:grid-cols-12 lg:gap-x-8 lg:px-10 lg:pb-32 lg:pt-16">
+    <div class="lg:col-span-6 lg:pt-16">
+      <p class="eyebrow reveal">Reykjavík · Supervised cold exposure</p>
+      <h1 class="reveal reveal-1 mt-8 font-display text-[2.7rem] font-normal leading-[1.06] tracking-tight sm:text-6xl lg:text-[4.4rem]">
+        Cold exposure<br />with a cardiologist<br />in the room,<br /><span class="italic text-ink-soft">not a camera.</span>
+      </h1>
+      <p class="reveal reveal-2 mt-10 max-w-md text-lg leading-relaxed text-ink-soft">
+        A Reykjavík clinic running medically supervised cold-exposure programs for
+        inflammation and mood — screened, written down to the degree, and tracked
+        on a dashboard. None of the influencer chest-beating.
+      </p>
+      <div class="reveal reveal-3 mt-10 flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-9">
+        <a href="/intake" class="cta">Start medical screening <span aria-hidden="true">→</span></a>
+        <a href="/protocol" class="cta-quiet">Read the 8-week protocol</a>
+      </div>
+      <p class="annot reveal reveal-4 mt-16 hidden items-center gap-2 lg:flex">(↓)&nbsp;&nbsp;Scroll to explore</p>
+    </div>
+
+    <div class="relative lg:col-span-6 lg:col-start-7">
+      <figure class="reveal reveal-2">
+        <img
+          src={heroImg}
+          alt="Pale blue-grey fog over still water at dawn in Reykjavík"
+          width="1100"
+          height="1320"
+          fetchpriority="high"
+          decoding="async"
+          class="mist-img aspect-[4/5] w-full object-cover lg:aspect-[5/6]"
+        />
+        <figcaption class="annot mt-3 flex justify-between">
+          <span>Still water · 12&thinsp;°C</span>
+          <span>Reykjavík, IS</span>
+        </figcaption>
+      </figure>
+      <span class="vtext absolute -left-7 top-2 hidden lg:block">Kyrrð — Mæling — Aðlögun</span>
+    </div>
+  </section>
+
+  <!-- 2 · Ethos -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-20 lg:px-10 lg:py-32">
+    <div class="grid gap-12 lg:grid-cols-12">
+      <p class="eyebrow lg:col-span-3">Not a dare</p>
+      <div class="lg:col-span-9">
+        <p class="font-display text-3xl leading-[1.3] sm:text-4xl lg:text-[2.9rem] lg:leading-[1.28]">
+          Not the cold, but the measurement.
+          <span class="text-ink-faint">We treat cold as a clinical tool — a temperature, a timer,
+          a supervisor on the deck — and we record what it does to your body so the
+          benefit is something you can read on a chart rather than feel in a video.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 · How it works -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-20 lg:px-10 lg:py-28">
+    <div class="grid gap-y-10 lg:grid-cols-12 lg:gap-x-8">
+      <h2 class="font-display text-2xl text-ink-soft lg:col-span-3">How it works</h2>
+      <ol class="lg:col-span-9">
+        {
+          steps.map((s, i) => (
+            <li class:list={["grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 py-8 sm:grid-cols-[auto_14rem_1fr]", i > 0 && "border-t border-line"]}>
+              <span class="annot pt-1.5">{s.n}</span>
+              <h3 class="font-display text-2xl">{s.title}</h3>
+              <p class="col-start-2 text-ink-soft sm:col-start-3 sm:max-w-md">{s.body}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- 4 · Protocol preview -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-20 lg:px-10 lg:py-28">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-xl">
+        <p class="eyebrow">The 8-week protocol</p>
+        <h2 class="mt-5 font-display text-3xl leading-snug sm:text-4xl">Eight weeks, plotted by temperature and time.</h2>
+      </div>
+      <a href="/protocol" class="cta-quiet">See the full protocol <span aria-hidden="true">(→)</span></a>
+    </div>
+    <div class="mt-14 grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8">
+      {
+        PROTOCOL_WEEKS.map((w, i) => (
+          <div class:list={["border-t border-line py-5 pr-4", i % 8 !== 0 && "lg:border-l lg:pl-4", "max-lg:border-l max-lg:pl-4", i % 2 === 0 && "max-sm:border-l-0 max-sm:pl-0"]}>
+            <p class="annot">Week {w.week}</p>
+            <p class="mt-4 font-display text-4xl tabular-nums">{w.tempC}<span class="metric-unit text-lg text-ink-faint">°c</span></p>
+            <p class="annot mt-2">{w.duration} min</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- 5 · Evidence (project-list style) -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-20 lg:px-10 lg:py-28">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div class="max-w-xl">
+        <p class="eyebrow">The evidence, briefly</p>
+        <h2 class="mt-5 font-display text-3xl leading-snug sm:text-4xl">What the studies actually say — including where they are thin.</h2>
+      </div>
+      <a href="/evidence" class="cta-quiet">Read all {research.length} summaries <span aria-hidden="true">(→)</span></a>
+    </div>
+    <ul class="mt-14">
+      {
+        evidencePreview.map((r) => (
+          <li>
+            <a href="/evidence" class="group grid grid-cols-[1fr_auto] items-baseline gap-x-6 gap-y-1 border-t border-line py-6 sm:grid-cols-[1fr_8rem_5rem_3rem]">
+              <span class="font-display text-xl transition-colors group-hover:text-mist sm:text-2xl">{r.title}</span>
+              <span class="annot max-sm:col-start-1">{r.topic}</span>
+              <span class="annot hidden sm:block">{r.effectStrength}</span>
+              <span class="annot text-right">{r.year}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- 6 · Data atmosphere band -->
+  <section class="relative mt-8 border-y border-line">
+    <img src={atmoImg} alt="Fog dissolving into still water" width="1800" height="760" loading="lazy" decoding="async" class="mist-img h-[58vh] min-h-[360px] w-full object-cover" />
+    <div class="absolute inset-0 flex items-center">
+      <div class="mx-auto w-full max-w-[1600px] px-5 lg:px-10">
+        <div class="max-w-lg bg-background/70 p-7 backdrop-blur-[2px] sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+          <p class="eyebrow">Your adaptation data</p>
+          <h2 class="mt-5 font-display text-3xl leading-snug sm:text-4xl">Your trend line,<br />not a testimonial.</h2>
+          <p class="mt-5 max-w-sm text-ink-soft">Resting heart rate, HRV, perceived recovery — you watch your own numbers move, week by week.</p>
+          <a href="/data" class="cta mt-7">See a sample dashboard <span aria-hidden="true">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 · Outcomes -->
+  <section class="mx-auto max-w-[1600px] px-5 py-20 lg:px-10 lg:py-28">
+    <p class="eyebrow">Client outcomes</p>
+    <div class="mt-12 grid gap-y-12 lg:grid-cols-3 lg:gap-x-10">
+      {
+        outcomes.map((o) => (
+          <figure class="border-t border-line pt-7">
+            <blockquote class="font-display text-2xl leading-[1.32]">“{o.quote}”</blockquote>
+            <figcaption class="mt-6">
+              <span class="font-display text-lg">{o.name}</span>
+              <span class="annot mt-1 block">{o.detail}</span>
+            </figcaption>
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+</Layout>

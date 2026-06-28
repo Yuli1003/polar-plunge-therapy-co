@@ -1,0 +1,160 @@
+@import 'tailwindcss';
+
+/* Self-hosted fonts — Newsreader (literary serif, used everywhere) + IBM Plex Sans (tiny labels/data only) */
+@import '@fontsource-variable/newsreader';
+@import '@fontsource-variable/newsreader/wght-italic.css';
+@import '@fontsource/ibm-plex-sans/400.css';
+@import '@fontsource/ibm-plex-sans/500.css';
+
+@theme {
+  /* Quiet, near-monochrome. Colour enters only through the misty photography. */
+  --color-background: #fcfcfb;   /* whisper-warm white */
+  --color-surface: #ffffff;
+  --color-ink: #1b2330;          /* soft near-black, cool */
+  --color-ink-soft: #5d6675;     /* secondary */
+  --color-ink-faint: #97a0ad;    /* tertiary / annotations */
+  --color-line: #e4e6e3;         /* hairline */
+  --color-mist: #7d93b0;         /* cold blue — links/hover accents, sparing */
+  --color-cyan: #8fb8d0;         /* data lines only */
+
+  /* aliases kept so older utility names still resolve */
+  --color-text: #1b2330;
+  --color-text-muted: #5d6675;
+  --color-border: #e4e6e3;
+  --color-primary: #1b2330;
+  --color-accent: #7d93b0;
+  --color-dark: #1b2330;
+  --color-on-dark: #e9edf2;
+
+  --font-display: 'Newsreader Variable', Newsreader, ui-serif, Georgia, 'Times New Roman', serif;
+  --font-body: 'Newsreader Variable', Newsreader, ui-serif, Georgia, serif;
+  --font-mono-label: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.55;
+    font-size: 1.0625rem;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    color: var(--color-ink);
+    letter-spacing: -0.01em;
+    line-height: 1.12;
+    text-wrap: balance;
+  }
+  ::selection { background: #dfe6ef; color: var(--color-ink); }
+  :focus-visible { outline: 1.5px solid var(--color-mist); outline-offset: 3px; }
+}
+
+@layer components {
+  /* tiny sans label / eyebrow — the only non-serif type */
+  .eyebrow,
+  .metric-label {
+    font-family: var(--font-mono-label);
+    font-weight: 500;
+    font-size: 0.66rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+  .annot {
+    font-family: var(--font-mono-label);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--color-ink-faint);
+  }
+  .metric-unit { font-variant: small-caps; letter-spacing: 0.03em; font-family: var(--font-mono-label); }
+
+  /* the primary action is a quiet serif text-link with a trailing arrow */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    min-height: 44px;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-ink);
+    border-bottom: 1px solid var(--color-ink);
+    padding-bottom: 2px;
+    transition: color 0.3s ease, border-color 0.3s ease, gap 0.3s ease;
+  }
+  .cta:hover { color: var(--color-mist); border-color: var(--color-mist); gap: 0.9rem; }
+  .cta-quiet {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    font-family: var(--font-display);
+    color: var(--color-ink-soft);
+    transition: color 0.3s ease, gap 0.3s ease;
+  }
+  .cta-quiet:hover { color: var(--color-ink); gap: 0.85rem; }
+
+  /* hairline */
+  .rule { height: 1px; background: var(--color-line); border: 0; }
+
+  /* vertical-set type — Icelandic accent words (kei's tategaki, localized) */
+  .vtext {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    font-family: var(--font-mono-label);
+    font-size: 0.66rem;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    white-space: nowrap;
+  }
+
+  /* the measured "adaptation" hairline that draws under select headings — kept thin and grey */
+  .adaptation-line {
+    display: block;
+    height: 12px;
+    width: 100%;
+    max-width: 6rem;
+    margin-top: 1rem;
+    overflow: visible;
+  }
+  .adaptation-line path {
+    stroke: var(--color-mist);
+    stroke-width: 1;
+    fill: none;
+    stroke-dasharray: 200;
+    stroke-dashoffset: 200;
+    animation: draw-line 1.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes draw-line { to { stroke-dashoffset: 0; } }
+
+  /* slow, quiet reveals */
+  .reveal { opacity: 0; transform: translateY(14px); animation: reveal-up 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .reveal-1 { animation-delay: 0.15s; }
+  .reveal-2 { animation-delay: 0.32s; }
+  .reveal-3 { animation-delay: 0.5s; }
+  .reveal-4 { animation-delay: 0.68s; }
+  @keyframes reveal-up { to { opacity: 1; transform: translateY(0); } }
+
+  /* misty photography sits a touch desaturated + cool to unify the set */
+  .mist-img { filter: saturate(0.82) contrast(1.02); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .adaptation-line path { stroke-dashoffset: 0; }
+  .reveal { opacity: 1; transform: none; }
+}

@@ -1,0 +1,104 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { SITE, wixImg } from "../lib/site";
+import { getStoryBlock } from "../lib/cms";
+
+const story = await getStoryBlock();
+const clinicImg = wixImg("surface", 1280, 720);
+
+const description =
+  "Who runs Polar Plunge Therapy Co., the cardiology partnership behind it, and why the bravado is left at the door. A Reykjavik clinic built as the opposite of a dare.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "MedicalClinic",
+  name: SITE.name,
+  description,
+  address: { "@type": "PostalAddress", addressLocality: "Reykjavik", addressCountry: "IS" },
+  foundingDate: SITE.established,
+  priceRange: SITE.priceRange,
+  openingHours: ["Mo-Fr 07:00-19:00", "Sa 08:00-14:00"],
+};
+
+const team = [
+  { name: "Dr. Sigrún Harðardóttir", role: "Cardiologist · Co-founder", bio: "A cardiologist tired of clearing people after the fact. She built the screening protocol that gates every program." },
+  { name: "Tómas Eriksson", role: "Exercise physiologist · Co-founder", bio: "Designed the eight-week adaptation program and the metrics dashboard. Keeps the temperatures written down and the deck supervised." },
+];
+
+const paragraphs = story?.body
+  ? story.body.split(/(?<=\.)\s+(?=[A-Z])/).reduce<string[]>((acc, s, i) => {
+      const idx = Math.floor(i / 3);
+      acc[idx] = (acc[idx] ? acc[idx] + " " : "") + s;
+      return acc;
+    }, [])
+  : [];
+---
+
+<Layout title="The Clinic" description={description} jsonLd={jsonLd}>
+  <header class="mx-auto max-w-[1600px] px-5 pt-16 lg:px-10 lg:pt-24">
+    <p class="eyebrow">The clinic</p>
+    <h1 class="mt-7 max-w-4xl font-display text-[2.5rem] font-normal leading-[1.07] tracking-tight sm:text-6xl">
+      {story?.heading ?? "Cold is a tool. We treat it like one."}
+    </h1>
+    <img src={clinicImg} alt="Still pale water at the clinic's cold-plunge pool" width="1280" height="720" loading="lazy" decoding="async" class="mist-img mt-12 aspect-[16/8] w-full object-cover" />
+  </header>
+
+  <!-- Story -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <div class="grid gap-y-10 lg:grid-cols-12 lg:gap-x-8">
+      <div class="relative lg:col-span-2">
+        <span class="vtext sticky top-28 hidden lg:block">Aðlögun · síðan 2020</span>
+      </div>
+      <div class="max-w-[44rem] space-y-6 text-xl leading-[1.6] text-ink-soft lg:col-span-7">
+        {paragraphs.length > 0 ? paragraphs.map((p) => <p>{p}</p>) : <p>The clinic opened in Reykjavik in 2020 as the opposite of a dare.</p>}
+      </div>
+      <dl class="self-start lg:col-span-3">
+        <p class="eyebrow mb-5">At a glance</p>
+        <div class="space-y-4">
+          <div class="border-t border-line pt-3"><dt class="annot">Location</dt><dd class="font-display text-lg">{SITE.city}, {SITE.country}</dd></div>
+          <div class="border-t border-line pt-3"><dt class="annot">Established</dt><dd class="font-display text-lg">{SITE.established}</dd></div>
+          <div class="border-t border-line pt-3"><dt class="annot">Hours</dt><dd class="font-display leading-snug">{SITE.hours}</dd></div>
+          <div class="border-t border-line pt-3"><dt class="annot">Price tier</dt><dd class="font-display text-lg">{SITE.priceRange}</dd></div>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- Team -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <div class="grid gap-y-10 lg:grid-cols-12 lg:gap-x-8">
+      <h2 class="font-display text-2xl text-ink-soft lg:col-span-3">Who runs it</h2>
+      <div class="lg:col-span-9">
+        {
+          team.map((m, i) => (
+            <div class:list={["grid gap-x-8 gap-y-2 py-8 sm:grid-cols-[18rem_1fr]", i > 0 && "border-t border-line"]}>
+              <div>
+                <h3 class="font-display text-2xl">{m.name}</h3>
+                <p class="annot mt-2">{m.role}</p>
+              </div>
+              <p class="max-w-md self-center text-ink-soft">{m.bio}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Find us -->
+  <section class="mx-auto max-w-[1600px] border-t border-line px-5 py-16 lg:px-10 lg:py-24">
+    <p class="eyebrow">Find us</p>
+    <a
+      href="https://www.openstreetmap.org/search?query=Reykjavik"
+      target="_blank"
+      rel="noopener"
+      class="group relative mt-7 block aspect-[21/8] w-full overflow-hidden border border-line"
+      aria-label="Open map of the Reykjavik clinic location"
+    >
+      <span class="absolute inset-0" style="background-image: linear-gradient(var(--color-line) 1px, transparent 1px), linear-gradient(90deg, var(--color-line) 1px, transparent 1px); background-size: 56px 56px;"></span>
+      <span class="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col items-center">
+        <span class="h-2.5 w-2.5 rounded-full bg-ink"></span>
+        <span class="annot mt-3 bg-background px-3 py-1 transition-colors group-hover:text-ink">{SITE.city}, {SITE.country} — open map (→)</span>
+      </span>
+    </a>
+  </section>
+</Layout>
